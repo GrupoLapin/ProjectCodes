@@ -19,12 +19,16 @@ import javax.swing.Timer;
 
 public class BalisticCurve extends JFrame {
 
+    
+    
+    
+    private int rpm = 6;// Rotações por minuto
     private static final double G = 9.8; 
     private int animationSpeed = 5; //velocidade da animaçãos
     private static int size = 900, ballDiameter = 10;
     private double startX, startY, ballX, ballY;
-    private double xSpeed, ySpeed, lastPointX, lastPointY, radius = 100;
-    private double angleStop = 270 * Math.PI/180, angle, time, deltaTime = 0.01 ; //ângulo em que a bola deve parar e realizar o lançamento; ângulo em que o programa está no momento; tempo em segundos
+    private double xSpeed, ySpeed, lastPointX, lastPointY, radius = 150;
+    private double angleStop = 325 * Math.PI/180, angle, time, deltaTime = 0.01 ; //ângulo em que a bola deve parar e realizar o lançamento; ângulo em que o programa está no momento; tempo em segundos
     private List<Point2D> curvePoints= new ArrayList<>();
     private Timer timer;
 
@@ -109,7 +113,9 @@ public class BalisticCurve extends JFrame {
                 g2d.drawLine((int)from.getX(),(int)from.getY(), (int)to.getX(), (int)to.getY());
             }
         }
-
+        public float time2  = 0.0f;
+        public double startX2  = 0.0f;
+        public double startY2  = 0.0f;
         private void moveBall() {
             
             if(time < angleStop){ //Tempo = ângulo em que o aplicativo está rodando, logo enquanto o tempo for menor que o ângulo de parada, a bola continua rodando no braço robótico
@@ -117,30 +123,25 @@ public class BalisticCurve extends JFrame {
             ballX = startX + radius * Math.cos(time); //Velocidade em que a bola deve girar de acordo com o raio colocado pelo usuário
             ballY = startY - radius * Math.sin(time); //Velocidade em que a bola deve girar de acordo com o raio colocado pelo usuário
             
-            xSpeed = 10*Math.cos(angleStop)*radius; 
-            ySpeed = 10*Math.sin(angleStop)*radius;
+            xSpeed = -Math.sin(angleStop) * radius * 0.10471975511965977 * rpm;//*radius; 
+            ySpeed = Math.cos(angleStop) * radius * 0.10471975511965977 * rpm;//*radius;
+            startX2 = ballX;
+            startY2 = ballY;       
             
-            /*
-            problema em 
-             xSpeed = 10*Math.cos(angleStop)*radius; 
-             ySpeed = 10*Math.sin(angleStop)*radius;
-            
-            independente da troca de posições ou calculando sua respectiva derivada, o resultado é o mesmo
-            a bola completa o angulo que é para ser lançado mas quando é lançada ela vai na direção
-            incorreta ou seja ela não calcula  o vetor tangente
-            */
-            
-            
+            System.out.println((int)ySpeed);
             
             } else {
-                
+            time2 += deltaTime;
             
-            ballX = startX + (xSpeed * time);
-            ballY = startY - ((ySpeed * time) -(0.5 * G * Math.pow(time, 2)))*ballY ;
+            ballX = startX2 + (xSpeed * time2);
+            ballY = startY2 - ((ySpeed * time2) -(0.5 * G * Math.pow(time2, 2)));//tira o ball y pois eçe nao faria sentido !
 
+            System.out.println("X " + (int)ballX + " Y: "+(int)ballY);
+           // System.out.println();
+            
             }
 
-            time += deltaTime;
+            time += deltaTime* 0.10471975511965977 * rpm;
 
         }
     }
@@ -155,3 +156,7 @@ public class BalisticCurve extends JFrame {
 
     }
 }
+
+
+
+
