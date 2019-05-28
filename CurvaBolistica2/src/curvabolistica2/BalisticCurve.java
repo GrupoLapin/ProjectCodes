@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import static java.lang.Math.sin;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -23,7 +24,7 @@ public class BalisticCurve extends JFrame {
     private static int size = 900, ballDiameter = 10;
     private double startX, startY, ballX, ballY;
     private double xSpeed, ySpeed, lastPointX, lastPointY, radius = 100;
-    private double angleStop = 110 * Math.PI/180, angle, time, deltaTime = 0.01 ; //ângulo em que a bola deve parar e realizar o lançamento; ângulo em que o programa está no momento; tempo em segundos
+    private double angleStop = 270 * Math.PI/180, angle, time, deltaTime = 0.01 ; //ângulo em que a bola deve parar e realizar o lançamento; ângulo em que o programa está no momento; tempo em segundos
     private List<Point2D> curvePoints= new ArrayList<>();
     private Timer timer;
 
@@ -58,7 +59,7 @@ public class BalisticCurve extends JFrame {
     private void getUserInput() {
 
         //double angle = 45;//angulo fornecido pelo usuario
-        double speed = 62.8;//velocidade fornecida pelo usuario
+        double speed = 62.5;//velocidade fornecida pelo usuario
         xSpeed = radius * Math.cos(angleStop);
         ySpeed = radius * Math.sin(angleStop);
     }
@@ -116,10 +117,26 @@ public class BalisticCurve extends JFrame {
             ballX = startX + radius * Math.cos(time); //Velocidade em que a bola deve girar de acordo com o raio colocado pelo usuário
             ballY = startY - radius * Math.sin(time); //Velocidade em que a bola deve girar de acordo com o raio colocado pelo usuário
             
+            xSpeed = 10*Math.cos(angleStop)*radius; 
+            ySpeed = 10*Math.sin(angleStop)*radius;
+            
+            /*
+            problema em 
+             xSpeed = 10*Math.cos(angleStop)*radius; 
+             ySpeed = 10*Math.sin(angleStop)*radius;
+            
+            independente da troca de posições ou calculando sua respectiva derivada, o resultado é o mesmo
+            a bola completa o angulo que é para ser lançado mas quando é lançada ela vai na direção
+            incorreta ou seja ela não calcula  o vetor tangente
+            */
+            
+            
+            
             } else {
                 
+            
             ballX = startX + (xSpeed * time);
-            ballY = startY - ((ySpeed * time) -(0.5 * G * Math.pow(time, 2))) ;
+            ballY = startY - ((ySpeed * time) -(0.5 * G * Math.pow(time, 2)))*ballY ;
 
             }
 
